@@ -1,3 +1,8 @@
+/**
+ * @author mrdrivingduck
+ * @version 2019.1.1
+ */
+
 package iot.zjt.jscapy.message;
 
 import java.util.Date;
@@ -8,7 +13,7 @@ import iot.zjt.jscapy.annotation.MessageType;
 
 @ApiUrl("/arping/%s")
 @MessageType("IP")
-public class IPMessage extends ScapyMessage {
+public class ArpingMessage extends ScapyMessage {
 
     public static String net = "";
 

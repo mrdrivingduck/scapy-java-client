@@ -1,3 +1,8 @@
+/**
+ * @author mrdrivingduck
+ * @version 2019.1.1
+ */
+
 package iot.zjt.jscapy;
 
 import java.io.IOException;
@@ -5,7 +10,9 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.List;
 
-import iot.zjt.jscapy.message.IPMessage;
+import io.vertx.core.Vertx;
+import iot.zjt.jscapy.message.ArpingMessage;
+import iot.zjt.jscapy.message.PacketMessage;
 import iot.zjt.jscapy.message.ScapyMessage;
 import iot.zjt.jscapy.util.HttpRequestBuilder;
 import iot.zjt.jscapy.util.MessageGenerator;
@@ -15,8 +22,8 @@ public abstract class JScapyListener {
 
     private String host;
     private int port;
+    private final Vertx vertx;
 
-    private boolean running;
     private int timeout;
     private int interval;
 
@@ -28,40 +35,44 @@ public abstract class JScapyListener {
     public JScapyListener(String host, int port) {
         this.host = host;
         this.port = port;
-        this.running = true;
         this.timeout = 3000;
         this.interval = 6000;
+        this.vertx = Vertx.vertx();
 
-        new Thread() {
-
-            @Override
-            public void run() {
-                
-                while (running) {
-
-                    try {
-                        sleep(interval);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    if (subscribed.contains(IPMessage.class)) {
-                        try {
-                            getIPMessage();
-                        } catch(IOException e) {
-                            printException();
-                        }
-                    }
-
+        vertx.setPeriodic(30 * 1000, handler -> {
+            if (subscribed.contains(ArpingMessage.class)) {
+                try {
+                    getArpingMessage();
+                } catch(IOException e) {
+                    printException();
                 }
             }
-        }.start();
+        });
+
+        vertx.setPeriodic(interval, handler -> {
+            if (subscribed.contains(PacketMessage.class)) {
+                try {
+                    getPacketMessage();
+                } catch(IOException e) {
+                    printException();
+                }
+            }
+        });
     }
 
-    private void getIPMessage() throws IOException {
-        URI uri = UriGenerator.buildUri(host, port, IPMessage.class, IPMessage.net);
+    private void getArpingMessage() throws IOException {
+        URI uri = UriGenerator.buildUri(host, port, ArpingMessage.class, ArpingMessage.net);
         String res = HttpRequestBuilder.doGet(uri, timeout);
         List<ScapyMessage> msgs = MessageGenerator.generateIPMsg(res);
+        for (int i = 0; i < msgs.size(); i++) {
+            onMessage(msgs.get(i));
+        }
+    }
+
+    private void getPacketMessage() throws IOException {
+        URI uri = UriGenerator.buildUri(host, port, PacketMessage.class, "");
+        String res = HttpRequestBuilder.doGet(uri, timeout);
+        List<ScapyMessage> msgs = MessageGenerator.generatePortMsg(res);
         for (int i = 0; i < msgs.size(); i++) {
             onMessage(msgs.get(i));
         }
@@ -71,19 +82,19 @@ public abstract class JScapyListener {
         System.err.println("Failed to connect to " + host + ":" + port);
     }
 
-    public synchronized void subscrIPMsg(String net) {
-        subscribed.add(IPMessage.class);
-        IPMessage.net = net;
+    public synchronized void subscrPktMsg() {
+        subscribed.add(PacketMessage.class);
+    }
+
+    public synchronized void subscrArpingMsg(String net) {
+        subscribed.add(ArpingMessage.class);
+        ArpingMessage.net = net;
     }
 
     public synchronized void unSubscribe(Class<? extends ScapyMessage> clazz) {
         if (subscribed.contains(clazz)) {
             subscribed.remove(clazz);
         }
-    }
-
-    public synchronized void kill() {
-        this.running = false;
     }
 
     public synchronized void setTimeout(int timeout) {

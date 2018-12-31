@@ -1,6 +1,12 @@
+/**
+ * @author mrdrivingduck
+ * @version 2019.1.1
+ */
+
 package iot.zjt.jscapy;
 
-import iot.zjt.jscapy.message.IPMessage;
+import iot.zjt.jscapy.message.ArpingMessage;
+import iot.zjt.jscapy.message.PacketMessage;
 import iot.zjt.jscapy.message.ScapyMessage;
 
 public class JScapy {
@@ -19,13 +25,16 @@ public class JScapy {
         
             @Override
             public void onMessage(ScapyMessage msg) {
-                IPMessage msgg = (IPMessage) msg;
-                System.out.println(msgg.getMac());
+                if (msg instanceof PacketMessage) {
+                    System.out.println(((PacketMessage) msg).getMac());
+                } else if (msg instanceof ArpingMessage) {
+                    System.out.println(((ArpingMessage) msg).getIp());
+                }
             }
         };
 
-        listener.subscrIPMsg("192.168.2.*");
+        listener.subscrArpingMsg("192.168.2.*");
+        listener.subscrPktMsg();
 
-        // listener.kill();
     }
 }

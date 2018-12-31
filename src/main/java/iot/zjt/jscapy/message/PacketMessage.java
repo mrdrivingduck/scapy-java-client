@@ -1,9 +1,18 @@
+/**
+ * @author mrdrivingduck
+ * @version 2019.1.1
+ */
+
 package iot.zjt.jscapy.message;
 
 import java.util.Date;
 
-public class PortMessage extends ScapyMessage {
+import iot.zjt.jscapy.annotation.ApiUrl;
 
+@ApiUrl("/sniff")
+public class PacketMessage extends ScapyMessage {
+
+    private String mac;
     private String ip;
     private int port;
     private Date firstSeen;
@@ -31,6 +40,14 @@ public class PortMessage extends ScapyMessage {
 
     public int getPort() {
         return port;
+    }
+
+    public String getMac() {
+        return mac;
+    }
+
+    public void setMac(String mac) {
+        this.mac = mac;
     }
 
     public Date getFirstSeen() {
