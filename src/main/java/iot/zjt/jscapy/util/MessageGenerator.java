@@ -1,3 +1,8 @@
+/**
+ * @author mrdrivingduck
+ * @version 2019.1.1
+ */
+
 package iot.zjt.jscapy.util;
 
 import java.util.ArrayList;
@@ -18,7 +23,7 @@ public class MessageGenerator {
         for (int i = 0; i < arr.size(); i++) {
             ArpingMessage msg = new ArpingMessage();
             msg.setIp(arr.getJSONObject(i).getString("ip"));
-            msg.setMac(arr.getJSONObject(i).getString("mac"));
+            msg.setMac(arr.getJSONObject(i).getString("mac").toUpperCase());
             allMsgs.add(msg);
         }
         return allMsgs;
@@ -30,10 +35,10 @@ public class MessageGenerator {
         for (int i = 0; i < arr.size(); i++) {
             PacketMessage source = new PacketMessage();
             PacketMessage destination = new PacketMessage();
-            source.setMac(arr.getJSONObject(i).getString("src_mac"));
+            source.setMac(arr.getJSONObject(i).getString("src_mac").toUpperCase());
             source.setIp(arr.getJSONObject(i).getString("src_ip"));
             source.setPort(arr.getJSONObject(i).getIntValue("src_port"));
-            destination.setMac(arr.getJSONObject(i).getString("dst_mac"));
+            destination.setMac(arr.getJSONObject(i).getString("dst_mac").toUpperCase());
             destination.setIp(arr.getJSONObject(i).getString("dst_ip"));
             destination.setPort(arr.getJSONObject(i).getIntValue("dst_port"));
             allMsgs.add(source);

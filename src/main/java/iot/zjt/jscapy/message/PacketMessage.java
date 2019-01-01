@@ -8,8 +8,10 @@ package iot.zjt.jscapy.message;
 import java.util.Date;
 
 import iot.zjt.jscapy.annotation.ApiUrl;
+import iot.zjt.jscapy.annotation.MessageType;
 
 @ApiUrl("/sniff")
+@MessageType("PACKET")
 public class PacketMessage extends ScapyMessage {
 
     private String mac;

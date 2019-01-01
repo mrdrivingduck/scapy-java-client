@@ -12,7 +12,7 @@ import iot.zjt.jscapy.annotation.FieldKey;
 import iot.zjt.jscapy.annotation.MessageType;
 
 @ApiUrl("/arping/%s")
-@MessageType("IP")
+@MessageType("ARPING")
 public class ArpingMessage extends ScapyMessage {
 
     public static String net = "";
