@@ -1,6 +1,6 @@
 /**
  * @author mrdrivingduck
- * @version 2019.1.1
+ * @version 2019.1.6
  */
 
 package iot.zjt.jscapy;
@@ -22,7 +22,6 @@ public abstract class JScapyListener {
 
     private String host;
     private int port;
-    private final Vertx vertx;
 
     private int timeout;
     private int interval;
@@ -32,12 +31,11 @@ public abstract class JScapyListener {
 
     private HashSet<Class<? extends ScapyMessage>> subscribed = new HashSet<>();
 
-    public JScapyListener(String host, int port) {
+    public JScapyListener(String host, int port, final Vertx vertx) {
         this.host = host;
         this.port = port;
         this.timeout = 3000;
         this.interval = 6000;
-        this.vertx = Vertx.vertx();
 
         vertx.setPeriodic(30 * 1000, handler -> {
             if (subscribed.contains(ArpingMessage.class)) {
