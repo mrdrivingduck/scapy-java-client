@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import iot.zjt.jscapy.message.ArpingMessage;
 import iot.zjt.jscapy.message.PacketMessage;
@@ -17,8 +18,20 @@ import iot.zjt.jscapy.message.ScapyMessage;
 
 public class MessageGenerator {
 
+    /*
+        {
+            'version': '1.0',
+            'result': [
+                {
+                    'mac': 'xxx',
+                    'ip': 'xxx'
+                }
+            ]
+        }
+    */
     public static List<ScapyMessage> generateIPMsg(String res) {
-        JSONArray arr = JSON.parseArray(res);
+        JSONObject resp = JSON.parseObject(res);
+        JSONArray arr =resp.getJSONArray("result");
         List<ScapyMessage> allMsgs = new ArrayList<>();
         for (int i = 0; i < arr.size(); i++) {
             ArpingMessage msg = new ArpingMessage();

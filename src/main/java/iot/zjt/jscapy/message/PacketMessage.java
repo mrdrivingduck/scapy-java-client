@@ -1,16 +1,14 @@
 /**
- * @author mrdrivingduck
- * @version 2019.1.1
+ * @author Mr Dk.
+ * @version 2019.2.2
  */
 
 package iot.zjt.jscapy.message;
 
 import java.util.Date;
 
-import iot.zjt.jscapy.annotation.ApiUrl;
 import iot.zjt.jscapy.annotation.MessageType;
 
-@ApiUrl("/sniff")
 @MessageType("PACKET")
 public class PacketMessage extends ScapyMessage {
 

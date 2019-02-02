@@ -35,8 +35,8 @@ public class JScapy {
             }
         };
 
-        listener.subscrArpingMsg("192.168.2.*");
-        listener.subscrPktMsg();
+        listener.subscrArpingMsg();
+        // listener.subscrPktMsg();
 
     }
 }
