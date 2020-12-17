@@ -22,6 +22,8 @@ public abstract class JScapyListener {
 
     private String host;
     private int port;
+    private String net;
+
     private HttpClient client;
 
     private int interval;
@@ -31,9 +33,10 @@ public abstract class JScapyListener {
 
     private HashSet<Class<? extends ScapyMessage>> subscribed = new HashSet<>();
 
-    public JScapyListener(String host, int port, final Vertx vertx) {
+    public JScapyListener(String host, int port, String net, final Vertx vertx) {
         this.host = host;
         this.port = port;
+        this.net = net;
         this.interval = 6000;
 
         HttpClientOptions options = new HttpClientOptions()
@@ -72,7 +75,7 @@ public abstract class JScapyListener {
         });
         request.putHeader("Content-Type", "application/json");
         request.putHeader("charset", "utf-8");
-        request.end(RequestParameter.arpingParameter(2, "192.168.1.100/24"));
+        request.end(RequestParameter.arpingParameter(2, this.net));
     }
 
     // conf

@@ -15,10 +15,12 @@ public class JScapy {
     public static void main(String[] args) {
 
         Vertx vertx = Vertx.vertx();
+
         String host = "localhost";
         int port = 8888;
+        String net = "192.168.2.106/24";
         
-        JScapyListener listener = new JScapyListener(host, port, vertx) {
+        JScapyListener listener = new JScapyListener(host, port, net, vertx) {
         
             @Override
             public void onTerminate(String reason) {
